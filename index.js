@@ -1,5 +1,7 @@
 require("dotenv").config();
 const express=require("express")
+const app=express();
+
 const bodyParser=require("body-parser")
 const axios=require("axios")
 
@@ -10,9 +12,23 @@ const URI=`/webhook/${TOKEN}`;
 const WEBHOOK_URL=SERVER_URL+URI;
 
 
-const app=express()
-app.use(bodyParser.json())
+
+
 const PORT=process.env.PORT || 5000
+
+app.listen(PORT, async ()=>{
+    console.log(`App running on ${PORT}`)
+    await init()
+})
+
+
+//middleware
+app.use(bodyParser.json())
+
+
+
+
+
 
 const init=async()=>{
     const res=await axios.get(`${TELEGRAM_API}/setWebhook?url=${WEBHOOK_URL}`)
@@ -21,19 +37,42 @@ const init=async()=>{
 
 
 app.post(URI, async (req, res)=>{
-    console.log(req.body)
+    // console.log(req.body)
     const chatId=req.body.message.chat.id
     const text=req.body.message.text
 
-    await axios.post(`${TELEGRAM_API}/sendMessage`, {
-        chat_id: chatId,
-        text: text
-    })
-    return res.send()
+
+    //send a fetch request to the dictionary api to get meaning
+    // console.log(text.split(" ")[0])
+    try{
+        const dictionaryWord=await axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${text.split(" ")[0]}`);
+        
+        if(dictionaryWord.data){
+            const definitions=dictionaryWord?.data[0].meanings[0].definitions;
+            let x=1;
+            let eachDefiniition=definitions.map(meaning=>{
+                return `${x++}.)  ${meaning.definition} \n \n`
+            })
+            
+            await axios.post(`${TELEGRAM_API}/sendMessage`, {
+                chat_id: chatId,
+                text: `The definition(s) for "${text}" is/are \n \n ${eachDefiniition.toString()}`
+            })
+            return res.send()
+        }else{
+            await axios.post(`${TELEGRAM_API}/sendMessage`, {
+                chat_id: chatId,
+                text: "No definitions"
+            })
+            return res.send()
+        }
+    }catch(err){
+        await axios.post(`${TELEGRAM_API}/sendMessage`, {
+            chat_id: chatId,
+            text: `${text} is not an english word`
+        })
+        return res.send()
+    }
 })
 
 
-app.listen(PORT, async ()=>{
-    console.log(`App running on ${PORT}`)
-    await init()
-})
