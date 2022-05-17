@@ -51,7 +51,7 @@ app.post(URI, async (req, res)=>{
                 
                 await axios.post(`${TELEGRAM_API}/sendMessage`, {
                     chat_id: chatId,
-                    text: `The definition(s) for "${text}" is/are \n \n ${eachDefiniition.toString()}`
+                    text: `The definition(s) for "${text}" is/are: \n \n ${eachDefiniition.toString()}`
                 })
                 return res.send()
             }else{
