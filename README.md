@@ -1,6 +1,6 @@
 # Dumb  Telegram Bot
 
-** PS: The bot is probably smarter in english than you! **
+** PS: The bot is probably smarter than you. It defines every words. **
 
 ## Description
 This is a telegram bot built with nodejs and express. It utilizes a dictionary api and defines words for you.
