@@ -9,8 +9,8 @@ const axios=require("axios")
 const {TOKEN, SERVER_URL, HEROKU_SERVER_URL}=process.env
 const TELEGRAM_API=`https://api.telegram.org/bot${TOKEN}`;
 const URI=`/webhook/${TOKEN}`;
-const WEBHOOK_URL=HEROKU_SERVER_URL+URI;
-//onst WEBHOOK_URL=SERVER_URL+URI;
+//const WEBHOOK_URL=HEROKU_SERVER_URL+URI;
+const WEBHOOK_URL=SERVER_URL+URI;
 
 
 
