@@ -76,8 +76,7 @@ app.post(URI, async (req, res)=>{
         try{
             await axios.post(`${TELEGRAM_API}/sendMessage`, {
                 chat_id: chatId,
-                text: `Welcome to Dictionary Bot. \n
-                I will define every word you give to me. \n You contact my developer via www.joshuaizu.vercel.app`
+                text: `Welcome to Dictionary Bot. \nI will define every word you give to me. \nYou contact my developer via https://joshuaizu.vercel.app`
             })
             return res.send()
         }catch(e){
