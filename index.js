@@ -16,7 +16,6 @@ const WEBHOOK_URL=SERVER_URL+URI;
 
 
 
-
 //middleware
 app.use(bodyParser.json())
 
@@ -32,8 +31,8 @@ const init=async()=>{
 
 app.post(URI, async (req, res)=>{
     //console.log(req.body)
-    const chatId=req.body.message.chat.id;
-    const text=req.body.message.text;
+    const chatId=req.body.message?.chat.id;
+    const text=req.body.message?.text;
     
 
     //send a fetch request to the dictionary api to get meaning
@@ -51,13 +50,15 @@ app.post(URI, async (req, res)=>{
                 
                 await axios.post(`${TELEGRAM_API}/sendMessage`, {
                     chat_id: chatId,
-                    text: `The definition(s) for "${text}" is/are: \n \n ${eachDefiniition.toString()}`
+                    text: `The definition(s) for "${text.split(" ")[0]}" is/are: \n \n ${eachDefiniition.toString()}`,
+                    reply_to_message_id: req.body.message.message_id
                 })
                 return res.send()
             }else{
                 await axios.post(`${TELEGRAM_API}/sendMessage`, {
                     chat_id: chatId,
-                    text: "No definitions"
+                    text: "No definitions",
+                    reply_to_message_id: req.body.message.message_id
                 })
                 return res.send()
             }
@@ -65,7 +66,8 @@ app.post(URI, async (req, res)=>{
             try{
                 await axios.post(`${TELEGRAM_API}/sendMessage`, {
                     chat_id: chatId,
-                    text: `${text} is not an english word`
+                    text: `"${text.split(" ")[0]}" is not an english word.`,
+                    reply_to_message_id: req.body.message.message_id
                 })
                 return res.send()
             }catch(e){
@@ -76,14 +78,15 @@ app.post(URI, async (req, res)=>{
         try{
             await axios.post(`${TELEGRAM_API}/sendMessage`, {
                 chat_id: chatId,
-                text: `Welcome to Dictionary Bot. \nI will define every word you give to me. \nYou contact my developer via https://joshuaizu.vercel.app`
+                text: `Welcome to Dictionary Bot. \nI will define every word you give to me. \nYou can contact my developer via https://joshuaizu.vercel.app`
             })
             return res.send()
         }catch(e){
             console.log(e)
         }
     }
-})
+});
+
 
 
 const PORT=process.env.PORT || 5000
@@ -91,4 +94,4 @@ const PORT=process.env.PORT || 5000
 app.listen(PORT, async ()=>{
     console.log(`App running on ${PORT}`)
     await init()
-})
+});
