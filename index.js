@@ -61,11 +61,15 @@ app.post(URI, async (req, res)=>{
             return res.send()
         }
     }catch(err){
-        await axios.post(`${TELEGRAM_API}/sendMessage`, {
-            chat_id: chatId,
-            text: `${text} is not an english word`
-        })
-        return res.send()
+        try{
+            await axios.post(`${TELEGRAM_API}/sendMessage`, {
+                chat_id: chatId,
+                text: `${text} is not an english word`
+            })
+            return res.send()
+        }catch(e){
+            console.log(e)
+        }
     }
 })
 
