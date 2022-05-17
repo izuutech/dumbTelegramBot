@@ -45,7 +45,7 @@ app.post(URI, async (req, res)=>{
             const definitions=dictionaryWord?.data[0].meanings[0].definitions;
             let x=1;
             let eachDefiniition=definitions.map(meaning=>{
-                return `${x++}.)  ${meaning.definition.toString()} \n \n`
+                return `${x++}.)  ${meaning.definition} \n \n`
             })
             
             await axios.post(`${TELEGRAM_API}/sendMessage`, {
