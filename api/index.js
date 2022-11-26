@@ -56,6 +56,7 @@ app.post(URI, async (req, res) => {
         return res.send();
       }
     } catch (err) {
+      console.log(err);
       try {
         await axios.post(`${TELEGRAM_API}/sendMessage`, {
           chat_id: chatId,
@@ -82,8 +83,9 @@ app.post(URI, async (req, res) => {
 
 // const PORT = process.env.PORT || 5000;
 
-//  app.listen(PORT, async () => {
-// console.log(`App running on ${PORT}`);
+// app.listen(PORT, async () => {
+//   console.log(`App running on ${PORT}`);
+// });
 (async () => {
   try {
     await init();
@@ -93,6 +95,5 @@ app.post(URI, async (req, res) => {
 })();
 
 app.get("/", (req, res) => res.send("bot running"));
-// });
 
 module.exports = app;
