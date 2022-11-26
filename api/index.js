@@ -5,7 +5,9 @@ const app = express();
 const bodyParser = require("body-parser");
 const axios = require("axios");
 
-const { TOKEN, SERVER_URL, HEROKU_SERVER_URL } = process.env;
+const TOKEN = process.env.TOKEN;
+const SERVER_URL = process.env.SERVER_URL;
+// const { TOKEN, SERVER_URL, HEROKU_SERVER_URL } = process.env;
 const TELEGRAM_API = `https://api.telegram.org/bot${TOKEN}`;
 const URI = `/webhook/${TOKEN}`;
 //const WEBHOOK_URL=HEROKU_SERVER_URL+URI;
@@ -94,6 +96,8 @@ app.post(URI, async (req, res) => {
   }
 })();
 
-app.get("/", (req, res) => res.send("bot running"));
+app.get("/", (req, res) => {
+  res.end("bot running");
+});
 
 module.exports = app;
